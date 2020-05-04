@@ -1,0 +1,5 @@
+### Jenkins plugin dependencies ###
+
+HTTP Request - basic plugin for making HTTP requests within the Declarative Pipeline
+  ID: http_request
+  Version: 2.60.3

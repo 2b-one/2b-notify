@@ -1,0 +1,8 @@
+{
+  "jobId": "metadata-fe",
+  "bitbucketProject": "mdd",
+  "bitbucketRepo": "one-metadata-frontend",
+  "branchName": "MDD-1636-simple-suggest",
+  "success": true,
+  "buildUrl": "https://jenkins.atc/job/mdd/job/metadata-fe/job/MDD-1636-simple-suggest/25/"
+}
