@@ -1,33 +1,30 @@
 #!groovy
-import groovy.transform.Field
 
-@Field
-def TOKEN = "Zj07EnEWWWQRFEqVgDSgs0mN"
+def call(String appUrl = null) {
+    if (!appUrl) {
+        appUrl = env.SLACK_BOT_URL as String
+    }
 
-def call(String appUrl) {
-    def projectId = getProjectId(env.JOB_NAME as String)
+    String bitbucketProject = getBitbucketProject(env.GIT_URL as String)
+    String bitbucketRepo = getBitbucketRepo(env.GIT_URL as String)
+    String jobId = getJobId(env.JOB_NAME as String)
     def branchName = env.BRANCH_NAME ?: 'none'
     def success = currentBuild.result in ['SUCCESS', null]
 
-    def json = """
-    {
-        "token": "$TOKEN",
-        "projectId": "$projectId",
-        "branchName": "$branchName",
-        "buildUrl": "$env.BUILD_URL",
-        "success": $success
-    }
-    """
-
-    def response = httpRequest url: appUrl, contentType: "APPLICATION_JSON_UTF8", httpMode: "POST", requestBody: json
-
-    println("Request body: ${json}")
-    println("Status: ${response.status}")
-    println("Content: ${response.content}")
+    sh "curl --header 'Content-Type: application/json' --request POST --data '{ \"bitbucketProject\": \"$bitbucketProject\", \"bitbucketRepo\": \"$bitbucketRepo\", \"jobId\": \"$jobId\", \"branchName\": \"$branchName\", \"buildUrl\": \"$env.BUILD_URL\", \"success\": $success }' ${appUrl}"
 }
 
 // Due to https://issues.jenkins-ci.org/browse/JENKINS-44278
-private static String getProjectId(String jobName) {
+private static String getJobId(String jobName) {
     def jobNameParts = jobName.tokenize('/')
     jobNameParts.size() < 2 ? jobName : jobNameParts[-2]
+}
+
+private static String getBitbucketProject(String gitUrl) {
+    gitUrl.tokenize('/')[-2]
+}
+
+private static String getBitbucketRepo(String gitUrl) {
+    def matcher = gitUrl =~ '([a-z-]+)\\.git'
+    matcher[0].last()
 }
