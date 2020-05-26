@@ -6,7 +6,7 @@ def call(String appUrl = null) {
     }
 
     String body = ''
-    String trackId = params.TRACK_ID
+    String trackId = params.TRACK_ID ?: 'none'
     def success = currentBuild.result in ['SUCCESS', null]
     if (success) {
         body = """
