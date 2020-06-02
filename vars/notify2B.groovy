@@ -19,7 +19,7 @@ def call(String appUrl = null) {
             "jobId": "$jobId",
             "branchName": "$branchName",
             "buildUrl": "$env.BUILD_URL",
-            "success": "$success"
+            "success": $success
         }
         """
 
