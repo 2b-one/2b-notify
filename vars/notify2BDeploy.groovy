@@ -7,11 +7,12 @@ def call(String appUrl = null) {
 
     try {
         if (params.AUTHOR) {
+            String author = "Author: ${params.AUTHOR}\\n"
             if (!currentBuild.description) {
-                currentBuild.description = ''
+                currentBuild.description = author
+            } else {
+                currentBuild.description = "\n $author"
             }
-
-            currentBuild.description += "Author: ${params.AUTHOR}\n"
         }
 
         String body = ''
